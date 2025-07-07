@@ -8,7 +8,8 @@
   },
   "scripts": {
    "test": "cross-env NODE_ENV=test jest",
-   "test:ci": "cross-env NODE_ENV=test jest --ci --coverage --watchAll=false"
+   "test:ci": "cross-env NODE_ENV=test jest --ci --coverage --watchAll=false",
+   "test:integration": "cross-env NODE_ENV=test jest --testPathPattern=integration --runInBand"
   },
   "engines": {
   "node": ">=18.0.0"
