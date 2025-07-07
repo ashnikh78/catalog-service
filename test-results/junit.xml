@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="6" failures="0" errors="0" time="5.742">
+  <testsuite name="Catalog Service Integration Tests" errors="0" failures="0" skipped="0" timestamp="2025-07-07T12:43:35" time="5.513" tests="6">
+    <testcase classname="Catalog Service Integration Tests Product CRUD Operations should return health status" name="Catalog Service Integration Tests Product CRUD Operations should return health status" time="0.106">
+    </testcase>
+    <testcase classname="Catalog Service Integration Tests Product CRUD Operations should create a new product" name="Catalog Service Integration Tests Product CRUD Operations should create a new product" time="0.111">
+    </testcase>
+    <testcase classname="Catalog Service Integration Tests Product CRUD Operations should fail to create a product with special characters only in name" name="Catalog Service Integration Tests Product CRUD Operations should fail to create a product with special characters only in name" time="0.044">
+    </testcase>
+    <testcase classname="Catalog Service Integration Tests Product CRUD Operations should create product with variants" name="Catalog Service Integration Tests Product CRUD Operations should create product with variants" time="0.052">
+    </testcase>
+    <testcase classname="Catalog Service Integration Tests Product CRUD Operations should create product with images" name="Catalog Service Integration Tests Product CRUD Operations should create product with images" time="0.103">
+    </testcase>
+    <testcase classname="Catalog Service Integration Tests Product CRUD Operations should fail to create product with missing required fields" name="Catalog Service Integration Tests Product CRUD Operations should fail to create product with missing required fields" time="0.031">
+    </testcase>
+  </testsuite>
+</testsuites>
