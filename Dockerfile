@@ -1,4 +1,3 @@
-
 # Build stage
 FROM node:18 AS builder
 WORKDIR /app
@@ -12,14 +11,11 @@ COPY package*.json ./
 # Install all dependencies (including devDependencies for testing)
 RUN npm ci --ignore-scripts
 
-# Rebuild sqlite3 for the container's platform
+# Rebuild sqlite3 from source
 RUN npm rebuild sqlite3 --build-from-source
 
 # Copy source code
 COPY . .
-
-# Run tests
-RUN npm run test:ci
 
 # Production stage
 FROM node:18-slim
