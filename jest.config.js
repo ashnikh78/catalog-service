@@ -12,15 +12,17 @@ module.exports = {
   // Automatically clear mocks between every test
   clearMocks: true,
 
-  // Remove coverage-related configs
-  // collectCoverage: true,
-  // collectCoverageFrom: [
-  //   'src/**/*.{js,ts}',
-  //   '!src/**/index.js',
-  //   '!**/*.test.js',
-  //   '!**/*.spec.js',
-  // ],
-  // coverageDirectory: 'coverage',
+  // Enable JUnit reporting for Jenkins
+  reporters: [
+    'default',
+    [
+      'jest-junit',
+      {
+        outputDirectory: 'test-results',
+        outputName: 'junit.xml',
+      },
+    ],
+  ],
 
   // Resolve modules from these directories
   moduleDirectories: ['node_modules', path.join(__dirname, 'src')],
