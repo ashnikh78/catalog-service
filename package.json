@@ -7,11 +7,13 @@
     "test": "tests"
   },
   {
+  {
   "scripts": {
     "test": "cross-env NODE_ENV=test jest",
-    "test:ci": "cross-env NODE_ENV=test jest --ci --coverage --watchAll=false --testResultsProcessor=jest-junit",
+    "test:ci": "cross-env NODE_ENV=test jest --ci --coverage --watchAll=false",
     "test:integration": "echo 'Integration tests not yet implemented' && exit 0"
-  },
+  }
+},
   "jest-junit": {
     "outputDirectory": "test-results",
     "outputName": "junit.xml"
