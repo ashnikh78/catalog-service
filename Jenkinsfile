@@ -1,32 +1,31 @@
-// This Jenkinsfile defines a CI/CD pipeline for the Catalog Service using Jenkins Pipeline DSL.
-// It includes stages for checking out the code, installing dependencies, running tests, building and pushing
 pipeline {
   agent any
   environment {
-    DOCKER_IMAGE = "yourrepo/catalog-service:${env.BUILD_NUMBER}"
-    DOCKER_IMAGE_LATEST = "yourrepo/catalog-service:latest"
-    DOCKER_REGISTRY = "docker.io" // Replace with your registry, e.g., 'ghcr.io' or '123456789012.dkr.ecr.us-east-1.amazonaws.com'
-    KUBE_NAMESPACE = "catalog-service"
-    KUBE_CREDENTIALS_ID = "kubeconfig" // Jenkins credential ID for Kubernetes config
-    NODE_ENV = "test" // Default to test for pipeline execution
+    DOCKER_IMAGE = "ashnikh78/catalog-service:${env.BUILD_NUMBER}"
+    DOCKER_IMAGE_LATEST = "ashnikh78/catalog-service:latest"
+    DOCKER_REGISTRY = "docker.io"
+    ENV_FILE_PATH = "D:/code/anand/printvista/services/catalog-service/.env"
+  }
+  tools {
+    nodejs "Node18"
   }
   stages {
     stage('Checkout') {
       steps {
-        checkout scm
-        sh 'echo "Checked out code from SCM"'
+        checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: 'https://github.com/ashnikh78/catalog-service.git', credentialsId: 'github-credentials']]])
+        bat 'echo "Checked out code from SCM"'
       }
     }
     stage('Install Dependencies') {
       steps {
-        sh 'npm install'
-        sh 'echo "Installed Node.js dependencies"'
+        bat 'npm install'
+        bat 'echo "Installed Node.js dependencies"'
       }
     }
     stage('Run Unit Tests') {
       steps {
-        sh 'npm run test'
-        sh 'echo "Unit tests completed successfully"'
+        bat 'npm run test'
+        bat 'echo "Unit tests completed successfully"'
       }
       post {
         failure {
@@ -36,8 +35,8 @@ pipeline {
     }
     stage('Run Integration Tests') {
       steps {
-        sh 'npm run test:integration'
-        sh 'echo "Integration tests completed successfully"'
+        bat 'npm run test:integration'
+        bat 'echo "Integration tests completed successfully"'
       }
       post {
         failure {
@@ -47,8 +46,8 @@ pipeline {
     }
     stage('Build Docker Image') {
       steps {
-        sh 'docker build -t $DOCKER_IMAGE -t $DOCKER_IMAGE_LATEST .'
-        sh 'echo "Built Docker images: $DOCKER_IMAGE and $DOCKER_IMAGE_LATEST"'
+        bat 'docker build -t %DOCKER_IMAGE% -t %DOCKER_IMAGE_LATEST% .'
+        bat 'echo "Built Docker images: %DOCKER_IMAGE% and %DOCKER_IMAGE_LATEST%"'
       }
       post {
         failure {
@@ -59,10 +58,10 @@ pipeline {
     stage('Push Docker Image') {
       steps {
         withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-          sh 'echo $DOCKER_PASS | docker login $DOCKER_REGISTRY -u $DOCKER_USER --password-stdin'
-          sh 'docker push $DOCKER_IMAGE'
-          sh 'docker push $DOCKER_IMAGE_LATEST'
-          sh 'echo "Pushed Docker images to $DOCKER_REGISTRY"'
+          bat 'echo %DOCKER_PASS% | docker login %DOCKER_REGISTRY% -u %DOCKER_USER% --password-stdin'
+          bat 'docker push %DOCKER_IMAGE%'
+          bat 'docker push %DOCKER_IMAGE_LATEST%'
+          bat 'echo "Pushed Docker images to %DOCKER_REGISTRY%"'
         }
       }
       post {
@@ -71,34 +70,30 @@ pipeline {
         }
       }
     }
-    stage('Deploy to Kubernetes') {
+    stage('Deploy to Docker') {
       steps {
-        withCredentials([file(credentialsId: "${KUBE_CREDENTIALS_ID}", variable: 'KUBECONFIG')]) {
-          sh '''
-            export KUBECONFIG=$KUBECONFIG
-            kubectl set image deployment/catalog-service catalog-service=$DOCKER_IMAGE -n $KUBE_NAMESPACE --record
-            kubectl rollout status deployment/catalog-service -n $KUBE_NAMESPACE --timeout=120s
-            echo "Deployed $DOCKER_IMAGE to Kubernetes namespace $KUBE_NAMESPACE"
-          '''
-        }
+        bat '''
+          docker stop catalog-service || exit 0
+          docker rm catalog-service || exit 0
+          docker pull %DOCKER_IMAGE%
+          docker run -d --name catalog-service --env-file %ENV_FILE_PATH% -p 3011:3011 %DOCKER_IMAGE%
+          ping 127.0.0.1 -n 6 > nul
+          curl -f http://localhost:3011/health || exit 1
+          echo "Deployed %DOCKER_IMAGE% locally"
+        '''
       }
       post {
         failure {
-          sh '''
-            export KUBECONFIG=$KUBECONFIG
-            kubectl rollout undo deployment/catalog-service -n $KUBE_NAMESPACE
-            echo "Rolled back deployment due to failure"
-          '''
-          error 'Kubernetes deployment failed, rolled back'
+          error 'Docker deployment failed'
         }
       }
     }
   }
   post {
     always {
-      sh 'docker logout'
+      bat 'docker logout'
       cleanWs()
-      sh 'echo "Cleaned workspace and logged out from Docker registry"'
+      bat 'echo "Cleaned workspace and logged out from Docker registry"'
     }
     success {
       echo 'Build, test, and deployment completed successfully'
