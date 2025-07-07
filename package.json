@@ -7,8 +7,9 @@
     "test": "tests"
   },
   "scripts": {
-     "test": "cross-env NODE_ENV=test jest"
-  },
+   "test": "cross-env NODE_ENV=test jest",
+   "test:ci": "cross-env NODE_ENV=test jest --ci --coverage --watchAll=false"
+},
   "engines": {
   "node": ">=18.0.0"
   },
