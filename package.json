@@ -1,31 +1,36 @@
-  
 {
   "name": "catalog-service",
   "version": "1.1.0",
   "description": "Catalog service for managing products, categories, variants, and images",
   "main": "src/index.js",
+  "directories": {
+    "test": "tests"
+  },
   "scripts": {
-    "start": "node src/index.js",
-    "test": "jest tests/*.test.js",
-    "test:integration": "jest tests/*.integration.test.js",
-    "test:coverage": "jest --coverage"
+     "test": "cross-env NODE_ENV=test jest"
   },
   "engines": {
-    "node": "^18.0.0"
+    "node": ">=18.0.0"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "sequelize": "^6.32.1",
-    "mysql2": "^3.6.0",
-    "helmet": "^7.0.0",
-    "cors": "^2.8.5",
-    "express-rate-limit": "^6.7.0",
-    "morgan": "^1.10.0",
     "body-parser": "^1.20.2",
-    "dotenv": "^16.0.3"
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "express-rate-limit": "^6.7.0",
+    "helmet": "^7.0.0",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.6.0",
+    "pg": "^8.16.3",
+    "sequelize": "^6.32.1"
   },
   "devDependencies": {
-    "jest": "^29.6.1",
-    "supertest": "^6.3.3"
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "babel-jest": "^30.0.4",
+    "cross-env": "^7.0.3",
+    "jest": "^30.0.4",
+    "sqlite3": "^5.1.7",
+    "supertest": "^7.1.1"
   }
 }

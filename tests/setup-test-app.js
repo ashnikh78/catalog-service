@@ -6,7 +6,8 @@ const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
 const productRoutes = require('../src/routes/productRoutes');
-const { sequelize, Product, Category, ProductVariant, ProductImage } = require('../src/models/Product');
+const path = require('path');
+const { Product, Category, ProductVariant, ProductImage, sequelize } = require('../../src/models/Product');
 require('dotenv').config({ path: '.env.test' }); // Load environment variables
 
 // Setup Express app
