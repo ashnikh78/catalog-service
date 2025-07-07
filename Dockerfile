@@ -3,16 +3,16 @@ FROM node:18 AS builder
 WORKDIR /app
 
 # Install build dependencies for sqlite3
-RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y python3 make g++ libsqlite3-dev && rm -rf /var/lib/apt/lists/*
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install all dependencies (including devDependencies for testing)
+# Install all dependencies (including devDependencies)
 RUN npm ci --ignore-scripts
 
 # Rebuild sqlite3 from source
-RUN npm rebuild sqlite3 --build-from-source
+RUN npm rebuild sqlite3 --build-from-source --sqlite=/usr/lib
 
 # Copy source code
 COPY . .
