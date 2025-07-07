@@ -1,1 +1,6 @@
 npm run test:coverage
+npm run lint        # Check for issues   
+ npm run lint:fix    # Auto-fix some issue
+ git config --global core.autocrlf true
+ node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+

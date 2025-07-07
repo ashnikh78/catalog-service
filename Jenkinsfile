@@ -5,7 +5,7 @@ pipeline {
     DOCKER_IMAGE = "ashnikh78/catalog-service:${env.BUILD_NUMBER}"
     DOCKER_IMAGE_LATEST = "ashnikh78/catalog-service:latest"
     DOCKER_REGISTRY = "docker.io"
-    DOCKER_USER = "ashnikh78"
+    DOCKER_USER = "ashnikh78@gmail.com"
     ENV_FILE_PATH = "D:/code/anand/printvista/services/catalog-service/.env"
     CONTAINER_NAME = "catalog-service"
     APP_PORT = "3011"
@@ -201,10 +201,15 @@ pipeline {
         
         script {
           def imageSize = readFile('image_size.txt').trim()
-          def imageSizeMB = (imageSize as Long) / (1024 * 1024)
-          echo "📊 Image size: ${imageSizeMB.round(2)} MB"
+          if (!imageSize?.isNumber()) {
+            error "❌ Failed to read image size or it's not a valid number. Value: '${imageSize}'"
+          }
+          def imageSizeMB = imageSize.toLong() / (1024.0 * 1024.0)
+          def imageSizeRounded = String.format("%.2f", imageSizeMB)
+          echo "📊 Image size: ${imageSizeRounded} MB"
         }
-        
+
+
         echo "✅ Docker image built successfully"
       }
     }
