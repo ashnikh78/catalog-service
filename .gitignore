@@ -1,0 +1,40 @@
+
+# Node.js
+node_modules/
+npm-debug.log
+package-lock.json
+
+# Environment files
+.env
+.env.test
+.env.development
+.env.production
+
+# Test artifacts
+coverage/
+
+# Docker
+*.log
+Dockerfile.*
+docker-compose*.yml
+
+# Editor and IDE files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Jenkins
+.jenkins/
+*.bak
+
+# Miscellaneous
+*.swp
+*.tmp
+temp/
+dist/
+build/

@@ -1,0 +1,2 @@
+# Node.js projects use package.json, not requirements.txt
+# This file is intentionally left blank or for documentation only.
