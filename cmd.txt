@@ -9,3 +9,7 @@ net stop "MySQL80"
 docker stop test-catalog 2>nul
 docker rm test-catalog 2>nul    
 docker build -t ashnikh78/catalog-service:latest .
+docker build --no-cache -t ashnikh78/catalog-service:latest .
+docker run --rm -it ashnikh78/catalog-service:latest /bin/sh
+$ npm install prom-client
+docker run --rm -it --env-file "D:/code/anand/printvista/services/catalog-service/.env" -p 3012:3011 ashnikh78/catalog-service:latest

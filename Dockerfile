@@ -5,11 +5,14 @@ WORKDIR /app
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install all dependencies (including devDependencies)
-RUN npm install
+# Install all dependencies using npm ci for reproducibility
+RUN npm ci
 
-# Rebuild sqlite3 from source (if needed)
-RUN npm rebuild sqlite3 --build-from-source --sqlite=/usr/lib
+# Explicitly install prom-client to ensure it's included
+RUN npm install prom-client@15.1.0 --save-exact
+
+# Verify prom-client installation
+RUN ls node_modules | grep prom-client || (echo "prom-client not found in node_modules" && exit 1)
 
 # Install MySQL client dependencies for Node.js
 RUN npm install mysql2 --save
@@ -21,6 +24,9 @@ COPY . .
 FROM node:18-slim
 WORKDIR /app
 
+# Install curl for healthcheck
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
 # Create a non-root user to run the app
 RUN useradd -m appuser
 
@@ -28,6 +34,9 @@ RUN useradd -m appuser
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/src ./src
+
+# Verify prom-client in production stage
+RUN ls node_modules | grep prom-client || (echo "prom-client not found in production node_modules" && exit 1)
 
 # Set ownership of the app files to the non-root user
 RUN chown -R appuser:appuser /app
