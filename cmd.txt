@@ -4,5 +4,8 @@ npm run lint        # Check for issues
  git config --global core.autocrlf true
  node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
  docker run --rm -e DB_HOST=host.docker.internal -e DB_PORT=3306 -e DB_USER=root -e DB_PASSWORD=Mys@80ld -p 3012:3011 test-catalog
+net stop "MySQL80"
 
-
+docker stop test-catalog 2>nul
+docker rm test-catalog 2>nul    
+docker build -t ashnikh78/catalog-service:latest .
